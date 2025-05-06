@@ -1,27 +1,27 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <complex>
+#include <complex>    //Libraries implement into the program
 #include <sstream>
 
-const unsigned int MAX_ITER = 64;
-const float BASE_WIDTH = 4.0f;
+const unsigned int MAX_ITER = 64;   //Constants 
+const float BASE_WIDTH = 4.0f;        
 const float BASE_HEIGHT = 4.0f;
 const float BASE_ZOOM = 0.5f;
 
-enum class State { CALCULATING, DISPLAYING };
+enum class State { CALCULATING, DISPLAYING }; //defines the state its in for rendering 
 
-class ComplexPlane : public sf::Drawable {
+class ComplexPlane : public sf::Drawable {        //complex Plane class inherits Drawable (SFML) 
 public:
-    ComplexPlane(int pixelWidth, int pixelHeight);
-    void updateRender();
+    ComplexPlane(int pixelWidth, int pixelHeight);        //Constructer: ComplexPlane the rest is the 
+    void updateRender();                                    // functions within the ComplexPlane
     void zoomIn();
     void zoomOut();
     void setCenter(sf::Vector2i mousePixel);
     void setMouseLocation(sf::Vector2i mousePixel);
     void loadText(sf::Text& text);
 
-private:
+private:         //Private variables
     sf::VertexArray m_vArray;
     sf::Vector2u m_pixel_size;
     float m_aspectRatio;
@@ -34,8 +34,15 @@ private:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
     size_t countIterations(sf::Vector2f coord) const;
-    void iterationsToRGB(size_t count, sf::Uint8& r, sf::Uint8& g, sf::Uint8& b) const;
+//counts the interaction it takes for a point to escape
+
+    void iterationsToRGB(size_t count, sf::Uint8& r, sf::Uint8& g, sf::Uint8& b) const;    
+//converts iteration count to RGB values to determine correct pixel color
+
+
     sf::Vector2f mapPixelToCoords(sf::Vector2i pixel) const;
+ // converts pixel coordinates to complex coordinates
+
 };
 
 
