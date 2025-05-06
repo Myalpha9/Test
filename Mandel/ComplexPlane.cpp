@@ -1,11 +1,13 @@
 #include "ComplexPlane.h"
 #include <cmath>
-#include <iostream>
+#include <iostream>		//Library Implemented 
 #include <sstream>
 #include <complex>
 
+
+//Constructor sets the intial view
 ComplexPlane::ComplexPlane(int pixelWidth, int pixelHeight) {
-    m_pixel_size = { pixelWidth, pixelHeight };
+    m_pixel_size = { pixelWidth, pixelHeight }; 
     m_aspectRatio = static_cast<float>(pixelHeight) / static_cast<float>(pixelWidth);
     m_plane_center = { 0.0f, 0.0f };
     m_plane_size = { BASE_WIDTH, BASE_HEIGHT * m_aspectRatio };
@@ -17,10 +19,10 @@ ComplexPlane::ComplexPlane(int pixelWidth, int pixelHeight) {
 }
 
 void ComplexPlane::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    target.draw(m_vArray);
+    target.draw(m_vArray); //draws the complex plane
 }
 
-void ComplexPlane::updateRender() {
+void ComplexPlane::updateRender() {	//updates the image
     if (m_State != State::CALCULATING) return;
 
     for (unsigned int i = 0; i < m_pixel_size.y; ++i) {
@@ -39,6 +41,8 @@ void ComplexPlane::updateRender() {
     m_State = State::DISPLAYING;
 }
 
+
+//zoom in function
 void ComplexPlane::zoomIn() {
     ++m_zoomCount;
     float xSize = BASE_WIDTH * std::pow(BASE_ZOOM, m_zoomCount);
@@ -47,6 +51,9 @@ void ComplexPlane::zoomIn() {
     m_State = State::CALCULATING;
 }
 
+
+
+//zoom out function
 void ComplexPlane::zoomOut() {
     --m_zoomCount;
     float xSize = BASE_WIDTH * std::pow(BASE_ZOOM, m_zoomCount);
@@ -55,15 +62,18 @@ void ComplexPlane::zoomOut() {
     m_State = State::CALCULATING;
 }
 
+
+//sets center
 void ComplexPlane::setCenter(sf::Vector2i pixel) {
     m_plane_center = mapPixelToCoords(pixel);
     m_State = State::CALCULATING;
 }
-
+//mouse location
 void ComplexPlane::setMouseLocation(sf::Vector2i pixel) {
     m_mouseLocation = mapPixelToCoords(pixel);
 }
 
+//updates text
 void ComplexPlane::loadText(sf::Text& text) 
 
 {
@@ -77,7 +87,7 @@ void ComplexPlane::loadText(sf::Text& text)
 
     text.setString(ss.str());
 }
-
+//runs calculatioin to determine how many iterations it took to escape
 size_t ComplexPlane::countIterations(sf::Vector2f coord) const {
     std::complex<double> c(coord.x, coord.y);
     std::complex<double> z = c;
@@ -90,7 +100,7 @@ size_t ComplexPlane::countIterations(sf::Vector2f coord) const {
     return iter;
 }
 
-
+//based on iterations determine sthe rgb color
 void ComplexPlane::iterationsToRGB(size_t count, sf::Uint8& r, sf::Uint8& g, sf::Uint8& b) const
 {
 	const size_t range = MAX_ITER / 5;
@@ -135,6 +145,7 @@ void ComplexPlane::iterationsToRGB(size_t count, sf::Uint8& r, sf::Uint8& g, sf:
 
 
 
+ //turns the x y coordinates into numbers to calculate into the Madelbrol set
 
 sf::Vector2f ComplexPlane::mapPixelToCoords(sf::Vector2i pixel) const {
     float x = static_cast<float>(pixel.x);
